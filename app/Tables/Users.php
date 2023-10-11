@@ -4,8 +4,11 @@ namespace App\Tables;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use ProtoneMedia\Splade\AbstractTable;
 use ProtoneMedia\Splade\SpladeTable;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class Users extends AbstractTable
 {
@@ -36,7 +39,21 @@ class Users extends AbstractTable
      */
     public function for()
     {
-        return User::query();
+        $globalSearch = AllowedFilter::callback('global', function ($query, $value) {
+            $query->where(function ($query) use ($value) {
+                Collection::wrap($value)->each(function ($value) use ($query) {
+                    $query
+                        ->orWhere('username', 'LIKE', "%{$value}%")
+                        ->orWhere('first_name', 'LIKE', "%{$value}%")
+                        ->orWhere('last_name', 'LIKE', "%{$value}%")
+                        ->orWhere('email', 'LIKE', "%{$value}%");
+                });
+            });
+        });
+        return QueryBuilder::for(User::class)
+        ->defaultSort('username')
+        ->allowedSorts(['username','first_name','last_name', 'email', 'language_code'])
+        ->allowedFilters(['username','first_name','last_name', 'email', $globalSearch]);
     }
 
     /**
@@ -48,8 +65,14 @@ class Users extends AbstractTable
     public function configure(SpladeTable $table)
     {
         $table
-            ->withGlobalSearch(columns: ['id'])
-            ->column('id', sortable: true);
+            ->withGlobalSearch(columns: ['id','username','first_name','last_name','email'])
+            ->column('id', sortable: true)
+            ->column('username', sortable: true)
+            ->column('first_name', sortable: true)
+            ->column('last_name', sortable: true)
+            ->column('email', sortable: true)
+            ->paginate(15);
+
 
             // ->searchInput()
             // ->selectFilter()
