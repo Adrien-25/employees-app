@@ -52,8 +52,8 @@ class Users extends AbstractTable
         });
         return QueryBuilder::for(User::class)
         ->defaultSort('username')
-        ->allowedSorts(['username','first_name','last_name', 'email', 'language_code'])
-        ->allowedFilters(['username','first_name','last_name', 'email', $globalSearch]);
+        ->allowedSorts(['id','username','first_name','last_name', 'email','created_at'])
+        ->allowedFilters(['id','username','first_name','last_name', 'email', $globalSearch]);
     }
 
     /**
@@ -71,6 +71,7 @@ class Users extends AbstractTable
             ->column('first_name', sortable: true)
             ->column('last_name', sortable: true)
             ->column('email', sortable: true)
+            ->column('created_at', sortable: true)
             ->paginate(15);
 
 
