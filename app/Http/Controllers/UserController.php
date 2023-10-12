@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Tables\Users;
 use App\Models\User;
+use App\Http\Requests\UpdateUserRequest;
 
 
 class UserController extends Controller
@@ -55,9 +56,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $user->update($request->validated());
+
+        return to_route('admin.users.index');
     }
 
     /**
