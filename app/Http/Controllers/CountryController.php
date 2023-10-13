@@ -84,8 +84,10 @@ class CountryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Country $country)
     {
-        //
+        $country->delete();
+        Splade::toast('Country deleted')->autoDismiss(3);
+        return back();
     }
 }
