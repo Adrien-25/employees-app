@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCountryRequest;
+use App\Models\Country;
+use App\Tables\Countries;
 use Illuminate\Http\Request;
+use ProtoneMedia\Splade\Facades\Splade;
 
 class CountryController extends Controller
 {
@@ -11,7 +15,9 @@ class CountryController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.countries.index', [
+            'countries' => Countries::class,
+        ]);
     }
 
     /**
@@ -19,15 +25,17 @@ class CountryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.countries.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCountryRequest $request)
     {
-        //
+        Country::create($request->validated());
+        Splade::toast('Country created')->autoDismiss(3);
+        return to_route('admin.countries.index');
     }
 
     /**
@@ -43,15 +51,17 @@ class CountryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('admin.countries.edit', compact('country'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Country $country)
     {
-        //
+        $country->update($request->validated());
+        Splade::toast('User updated')->autoDismiss(3);
+        return to_route('admin.users.index');
     }
 
     /**

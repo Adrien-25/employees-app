@@ -64,7 +64,6 @@ class UserController extends Controller
     {
         $user->update($request->validated());
         Splade::toast('User updated')->autoDismiss(3);
-
         return to_route('admin.users.index');
     }
 

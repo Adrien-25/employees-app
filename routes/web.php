@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\StateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,11 +51,11 @@ Route::middleware('splade')->group(function () {
     Route::middleware('auth')->prefix('/admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
         Route::resource('/users',UserController::class);
-        Route::resource('/employees',UserController::class);
-        Route::resource('/countries',UserController::class);
-        Route::resource('/states',UserController::class);
-        Route::resource('/cities',UserController::class);
-        Route::resource('/departments',UserController::class);
+        Route::resource('/employees',EmployeeController::class);
+        Route::resource('/countries',CountryController::class);
+        Route::resource('/states',StateController::class);
+        Route::resource('/cities',CityController::class);
+        Route::resource('/departments',DepartmentController::class);
     });
 
 
