@@ -7,7 +7,7 @@
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <Link href="{{ route('dashboard') }}">
-                            <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                         </Link>
                     </div>
 
@@ -16,6 +16,11 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        @role('admin')
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                            {{ __('Admin') }}
+                        </x-nav-link>
+                        @endrole
                     </div>
                 </div>
 
