@@ -6,9 +6,13 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middlewares\RoleMiddleware;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +52,7 @@ Route::middleware('splade')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
-    Route::middleware('auth')->prefix('/admin')->name('admin.')->group(function () {
+    Route::middleware(['auth'])->prefix('/admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::resource('/users',UserController::class);
         Route::resource('/employees',EmployeeController::class);
@@ -56,6 +60,8 @@ Route::middleware('splade')->group(function () {
         Route::resource('/states',StateController::class);
         Route::resource('/cities',CityController::class);
         Route::resource('/departments',DepartmentController::class);
+        Route::resource('/roles', RoleController::class);
+        Route::resource('/permissions', PermissionController::class);
     });
 
 
