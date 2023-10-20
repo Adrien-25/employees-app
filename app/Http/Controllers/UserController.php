@@ -8,7 +8,8 @@ use App\Tables\Users;
 use App\Models\User;
 use App\Http\Requests\UpdateUserRequest;
 use ProtoneMedia\Splade\Facades\Splade;
-
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -20,7 +21,6 @@ class UserController extends Controller
         return view('admin.users.index', [
             'users' => Users::class,
         ]);
-
     }
 
     /**
@@ -28,7 +28,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        return view('admin.users.create', [
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
+            'roles' => Role::pluck('name', 'id')->toArray()
+        ]);
     }
 
     /**
@@ -36,17 +39,12 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+        $user->syncRoles($request->roles);
+        $user->syncPermissions($request->permissions);
         Splade::toast('User created')->autoDismiss(3);
-        return to_route('admin.users.index');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        return to_route('admin.users.index');
     }
 
     /**
@@ -54,7 +52,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.users.edit', compact('user'));
+        return view('admin.users.edit', [
+            'permissions' => Permission::pluck('name', 'id')->toArray(),
+            'roles' => Role::pluck('name', 'id')->toArray(),
+            'user' => $user
+        ]);
     }
 
     /**
